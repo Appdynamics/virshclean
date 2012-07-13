@@ -9,7 +9,7 @@ for v in `echo ${ALL[@]}`; do
             echo $TSDATE "Detected bad instance, destroying domain: " ${x} " instance id: "${v}
             virsh destroy ${x}
             for l in `dmsetup table | grep ${v} | cut -f 1 -d ':'`; do
-                dmsetup remove  $l
+                dmsetup remove  $l; sleep 2; dmsetup remove $l
             done
         done
     else
