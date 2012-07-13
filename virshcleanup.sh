@@ -8,12 +8,11 @@ for v in `echo ${ALL[@]}`; do
             TSDATE=($(date +%H%M%S.%m%d%Y))
             echo $TSDATE "Detected bad instance, destroying domain: " ${x} " instance id: "${v}
             virsh destroy ${x}
-            for d in `dmsetup table | grep ${v} | cut -f 1 -d ':'`; do
-                dmsetup remove ${d}; sleep 5; dmsetup remove ${d};
-            done
             for l in `dmsetup table | grep ${v} | cut -f 1 -d ':' | sed "s/^.*${v}-//"`; do
                 WID=($(dmsetup table | grep ${v} | cut -f 1 -d ':'| sed "s/\-/ /g" | awk '{print $2}' | sort -u))
-                for LOOP in `losetup -j /var/lib/eucalyptus/instances/work/${WID}/${l}.blocks 2> /dev/null | awk -F":" '{print $1}'`; do
+                d=($(dmsetup table | grep ${v} | cut -f 1 -d ':' | sort -u))
+                dmsetup remove ${d}; sleep 5; dmsetup remove ${d};
+                for LOOP in `losetup -j /var/lib/eucalyptus/instances/work/${WID}/${v}/${l}.blocks 2> /dev/null | awk -F":" '{print $1}'`; do
                     losetup -d $LOOP
                 done
 #                losetup -j ${l}.loopback
