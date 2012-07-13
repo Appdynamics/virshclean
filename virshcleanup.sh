@@ -7,7 +7,7 @@ for v in `echo ${ALL[@]}`; do
         for x in `virsh list | grep "i-" | grep ${v} | awk '{print $1}'`; do
             TSDATE=($(date +%H%M%S.%m%d%Y))
             echo $TSDATE "Detected bad instance, destroying domain: " ${x} " instance id: "${v}
-            virst destroy ${x}
+            virsh destroy ${x}
             for d in `dmsetup table | grep ${v} | cut -f 1 -d ':'`; do
                 dmsetup remove ${d}; sleep 5; dmsetup remove ${d};
             done
