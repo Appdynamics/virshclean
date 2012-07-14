@@ -8,9 +8,9 @@ for v in `echo ${ALL[@]}`; do
             TSDATE=($(date +%H%M%S.%m%d%Y))
             echo $TSDATE "Detected bad instance, destroying domain: " ${x} " instance id: "${v}
             virsh destroy ${x}
-            for l in `dmsetup table | grep ${v} | cut -f 1 -d ':'`; do
-                dmsetup remove  $l; sleep 2; dmsetup remove $l
-            done
+        done
+        for l in `dmsetup table | grep ${v} | cut -f 1 -d ':'`; do
+            dmsetup remove  $l; sleep 2; dmsetup remove $l
         done
     else
         echo "domain: " ${x} " instance id: "${v} "is good.  Leaving alone."
